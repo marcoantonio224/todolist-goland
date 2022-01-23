@@ -1,4 +1,5 @@
 syntax = "proto3";
+package todo;
 option go_package = "./protobuf/todo";
 
 // Todolist application services

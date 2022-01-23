@@ -24,7 +24,7 @@ In order to get this application up and running, please install the following te
 ## gRPC
 In order to generate the compiled protobuf files necessary for this application (assuming you have downloaded the protocol buffer compiler) run this command on the root level of this directory
 
-     protoc protobuf/todo.proto -I. --go_out=:. ./protobuf/todo.proto
+     protoc protobuf/todo.proto --go_out=plugins=grpc:.
 This will then generate a compiled go package labled as `todo.pb.go` inside of `protobuf` directory.
 
 ## Environmental Variables
