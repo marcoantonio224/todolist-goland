@@ -1,5 +1,5 @@
 syntax = "proto3";
-package todoPb;
+option go_package = "./protobuf/todo";
 
 // Todolist application services
 service Todolist {
@@ -18,4 +18,3 @@ message FirstItemRequest {}
 message FirstItemResponse {
   Todo todo = 1;
 }
-
