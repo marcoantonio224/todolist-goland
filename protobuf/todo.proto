@@ -1,0 +1,21 @@
+syntax = "proto3";
+package todoPb;
+
+// Todolist application services
+service Todolist {
+  // Traditional client/server interaction
+  // Return the first todo item
+  rpc GetFirstItem(FirstItemRequest) returns (FirstItemResponse) {}
+}
+
+message Todo {
+  int32 id = 1;
+  string todo = 2;
+  bool completed = 3;
+}
+
+message FirstItemRequest {}
+message FirstItemResponse {
+  Todo todo = 1;
+}
+
