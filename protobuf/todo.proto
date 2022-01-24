@@ -2,9 +2,8 @@ syntax = "proto3";
 package todo;
 option go_package = "./protobuf/todo";
 
-// Todolist application services
+// Todolist unary services
 service Todolist {
-  // Traditional client/server interaction
   // Return the first todo item
   rpc GetFirstItem(FirstItemRequest) returns (FirstItemResponse) {}
 }
