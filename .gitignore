@@ -16,3 +16,6 @@
 # env file
 .env
 *.pb.go
+
+# Go compiled files
+*main

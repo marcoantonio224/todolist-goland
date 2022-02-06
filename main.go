@@ -2,13 +2,17 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
+
+	pb "todolist/protobuf/todo"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/joho/godotenv"
+	"google.golang.org/grpc"
 )
 
 var db *gorm.DB
@@ -29,7 +33,6 @@ func configureDB() *gorm.DB {
 	if err != nil {
 		panic(err)
 	}
-
 	return db
 }
 
@@ -40,15 +43,33 @@ func getFirstTodo(db gorm.DB) Todo {
 }
 
 func main() {
+	// Configure database
 	db := configureDB()
 	defer db.Close()
-	firstTodo := getFirstTodo(*db)
+	// Configure grpc dial connection
+	conn, err := grpc.Dial("grpc_server:50051", grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("Did not connect: %v", err)
+	}
+	defer conn.Close()
 
-	router := gin.New()
+	client := pb.NewTodolistClient(conn)
+	router := gin.Default()
 
 	router.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, fmt.Sprintf("First todo item: %s", firstTodo.Todo))
+		res, err := client.GetFirstItem(c, &pb.FirstItemRequest{})
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"result": fmt.Sprint(res.GetTodo()),
+		})
 	})
 
-	router.Run()
+	if err := router.Run(":8080"); err != nil {
+		log.Fatalf("Could not run gin server")
+	}
 }
