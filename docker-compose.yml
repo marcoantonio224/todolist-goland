@@ -1,16 +1,32 @@
 version: '3'
 
 services:
+  grpc_server:
+    container_name: todolist-grpc-server
+    build:
+      context: .
+      dockerfile: ./docker/grpc.dockerfile
+    ports:
+      - 50051:50051
+    tty:
+      true
+    volumes:
+      - .:/grpc
+    depends_on:
+      - database
+
   web:
     build:
       context: .
       dockerfile: ./docker/app.dockerfile
     ports:
       - 8080:8080
+    tty:
+      true
     volumes:
       - .:/todolist
     depends_on:
-      - database
+      - grpc_server
     container_name: todolist-docker-web
     environment:
       - 'DB_PORT=3306'
@@ -35,7 +51,6 @@ services:
       - todolist-docker-data:/var/lib/mysql
     command: --default-authentication-plugin=mysql_native_password
 
-# persisted storage
 volumes:
   todolist-docker-data:
 

@@ -20,7 +20,7 @@ type RegisterTodolistServer struct {
 
 func (s *RegisterTodolistServer) GetFirstItem(ctx context.Context, input *pb.FirstItemRequest) (*pb.FirstItemResponse, error) {
 	log.Printf("Requesting first item with no input")
-	return &pb.FirstItemResponse{Todo: &pb.Todo{Id: 1, Todo: "Learn Go!", Completed: true}}, nil
+	return &pb.FirstItemResponse{Todo: &pb.Todo{Id: 1, Todo: "Learn Go, gRPC, and Docker!", Completed: true}}, nil
 }
 
 func main() {
